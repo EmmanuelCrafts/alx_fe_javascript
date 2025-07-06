@@ -236,5 +236,26 @@ async function sendQuotesToServer() {
   
   // Step 4: Add button listener
   document.getElementById("sendQuotesBtn").addEventListener("click", sendQuotesToServer);
+  // 🔸 Send all quotes to the server
+async function syncQuotes() {
+    try {
+      const response = await fetch("https://jsonplaceholder.typicode.com/posts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(quotes)
+      });
+  
+      if (response.ok) {
+        alert("Quotes successfully sent to the server!");
+      } else {
+        alert("Failed to send quotes to the server.");
+      }
+    } catch (error) {
+      console.error("Error syncing quotes:", error);
+      alert("Error syncing quotes with server.");
+    }
+  }
   
 });
