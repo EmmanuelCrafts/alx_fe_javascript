@@ -1,11 +1,20 @@
 document.addEventListener("DOMContentLoaded", function(){
+   
+
     const quoteDisplay = document.getElementById("quoteDisplay");
     const button = document.getElementById("newQuote");
-    let quotes = [
-    { text: "The best way to predict the future is to create it.", category: "Motivation" },
-    { text: "Life is really simple, but we insist on making it complicated.", category: "Life" }
-    ];
+    let quotes = [];
     
+         const savedQuotes = localStorage.getItem("quotes");
+          if (savedQuotes) {
+            quotes = JSON.parse(savedQuotes);
+           } else {
+              quotes = [
+                { text: "The best way to predict the future is to create it.", category: "Motivation" },
+                { text: "Life is really simple, but we insist on making it complicated.", category: "Life" }
+              ];
+            }
+
     button.addEventListener("click", showRandomQuote);
     function showRandomQuote(){
         let randomIndex = Math.floor(Math.random()* quotes.length);
@@ -53,7 +62,9 @@ document.addEventListener("DOMContentLoaded", function(){
                 }
 
             quotes.push({ text: quoteText, category: categoryText });
-              form.reset();
+              saveQuotes();
+            form.reset();
+
          });
     }
       // 🔸 5. Add Quote from Static HTML Form (Step 3)
@@ -67,10 +78,51 @@ if (quoteText === "" || categoryText === "") {
 }
 
 quotes.push({ text: quoteText, category: categoryText });
+saveQuotes();
 document.getElementById("newQuoteText").value = "";
 document.getElementById("newQuoteCategory").value = "";
 alert("Quote added successfully (from static form)!");
 };
 // 🔸 7. Initialize the dynamic form
 createAddQuoteForm();
+function saveQuotes() {
+    localStorage.setItem("quotes", JSON.stringify(quotes));
+  }
+  
+  document.getElementById("exportBtn").addEventListener("click", function () {
+    const dataStr = JSON.stringify(quotes, null, 2); // convert to readable JSON
+    const blob = new Blob([dataStr], { type: "application/json" });
+
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "quotes.json"; // file name
+    a.click();
+
+    URL.revokeObjectURL(url); // cleanup
+});
+
+document.getElementById("importFile").addEventListener("change", function (event) {
+    const fileReader = new FileReader();
+
+    fileReader.onload = function (e) {
+        try {
+            const importedQuotes = JSON.parse(e.target.result);
+
+            if (!Array.isArray(importedQuotes)) {
+                throw new Error("Invalid file format.");
+            }
+
+            quotes.push(...importedQuotes); // add to existing
+            saveQuotes(); // update localStorage
+            alert("Quotes imported successfully!");
+        } catch (err) {
+            alert("Failed to import quotes: " + err.message);
+        }
+    };
+
+    fileReader.readAsText(event.target.files[0]); // read file content
+});
+
 });
