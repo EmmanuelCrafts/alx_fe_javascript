@@ -140,12 +140,13 @@ function populateCategories() {
     });
 
     // Add each unique category to the dropdown
-    uniqueCategories.forEach(category => {
+    Array.from(uniqueCategories).map(category => {
         const option = document.createElement("option");
         option.value = category;
         option.textContent = category;
         filterSelect.appendChild(option);
     });
+    
 
     // Restore previously selected filter if any
     const savedCategory = localStorage.getItem("selectedCategory");
