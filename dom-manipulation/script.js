@@ -214,4 +214,27 @@ document.getElementById("manualSyncBtn").addEventListener("click", function () {
     }
 });
 
+// Step 3: Send Quotes to Server (POST)
+async function sendQuotesToServer() {
+    try {
+      const response = await fetch("https://jsonplaceholder.typicode.com/posts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(quotes)
+      });
+  
+      const result = await response.json();
+      console.log("Quotes posted to server:", result);
+      alert("Quotes sent to server successfully!");
+    } catch (error) {
+      console.error("Failed to post quotes:", error);
+      alert("Error sending quotes to server.");
+    }
+  }
+  
+  // Step 4: Add button listener
+  document.getElementById("sendQuotesBtn").addEventListener("click", sendQuotesToServer);
+  
 });
