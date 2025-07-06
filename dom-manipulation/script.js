@@ -63,6 +63,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
             quotes.push({ text: quoteText, category: categoryText });
               saveQuotes();
+              populateCategories();
             form.reset();
 
          });
@@ -85,6 +86,7 @@ alert("Quote added successfully (from static form)!");
 };
 // 🔸 7. Initialize the dynamic form
 createAddQuoteForm();
+populateCategories();
 function saveQuotes() {
     localStorage.setItem("quotes", JSON.stringify(quotes));
   }
@@ -124,5 +126,56 @@ document.getElementById("importFile").addEventListener("change", function (event
 
     fileReader.readAsText(event.target.files[0]); // read file content
 });
+
+function populateCategories() {
+    const filterSelect = document.getElementById("categoryFilter");
+    const uniqueCategories = new Set();
+
+    // Clear the dropdown first
+    filterSelect.innerHTML = '<option value="all">All Categories</option>';
+
+    // Collect unique categories
+    quotes.forEach(quote => {
+        uniqueCategories.add(quote.category);
+    });
+
+    // Add each unique category to the dropdown
+    uniqueCategories.forEach(category => {
+        const option = document.createElement("option");
+        option.value = category;
+        option.textContent = category;
+        filterSelect.appendChild(option);
+    });
+
+    // Restore previously selected filter if any
+    const savedCategory = localStorage.getItem("selectedCategory");
+    if (savedCategory) {
+        filterSelect.value = savedCategory;
+        filterQuotes(); // immediately filter quotes if saved category exists
+    }
+}
+
+function filterQuotes() {
+    const selectedCategory = document.getElementById("categoryFilter").value;
+    localStorage.setItem("selectedCategory", selectedCategory);
+
+    let filteredQuotes;
+
+    if (selectedCategory === "all") {
+        filteredQuotes = quotes;
+    } else {
+        filteredQuotes = quotes.filter(q => q.category === selectedCategory);
+    }
+
+    if (filteredQuotes.length === 0) {
+        quoteDisplay.innerHTML = "<p>No quotes available in this category.</p>";
+        return;
+    }
+
+    const randomIndex = Math.floor(Math.random() * filteredQuotes.length);
+    const quote = filteredQuotes[randomIndex];
+
+    quoteDisplay.innerHTML = `<p>${quote.text}</p><small>Category: ${quote.category}</small>`;
+}
 
 });

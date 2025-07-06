@@ -79,22 +79,39 @@
   font-size: 14px;
 }
 
+#categoryFilter {
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
   </style>
   
 </head>
 <body>
   <h1>Dynamic Quote Generator</h1>
+
   <div id="quoteDisplay"></div>
   <button id="newQuote">Show New Quote</button>
   <div id="formContainer"></div>
+
   <div>
     <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
     <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
     <button onclick="addQuote()">Add Quote</button>
   </div>
+
   <button id="exportBtn">Export Quotes</button>
   <input type="file" id="importFile" accept=".json" />
 
+  <label for="categoryFilter">Filter by Category:</label>
+<select id="categoryFilter" onchange="filterQuotes()">
+  <option value="all">All Categories</option>
+</select>
+
+  
   <script src="script.js"></script>
 </body>
 </html>
