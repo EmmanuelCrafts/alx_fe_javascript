@@ -178,5 +178,44 @@ function filterQuotes() {
 
     quoteDisplay.innerHTML = `<p>${quote.text}</p><small>Category: ${quote.category}</small>`;
 }
+// Step 1: Simulate Fetching Quotes from Server
+function fetchQuotesFromServer() {
+    fetch("https://jsonplaceholder.typicode.com/posts")
+      .then(response => response.json())
+      .then(serverData => {
+        const serverQuotes = serverData.slice(0, 5).map(post => ({
+          text: post.title,
+          category: "Server"
+        }));
+  
+        // Optional Conflict Resolution Strategy
+        // You can merge or replace. Here we REPLACE local quotes.
+        quotes = serverQuotes;
+  
+        saveQuotes();
+        populateCategories();
+        showRandomQuote();
+  
+        // Notify the user (optional)
+        console.log(" Quotes synced from server.");
+        alert("Quotes updated from server.");
+      })
+      .catch(error => {
+        console.error("Error syncing with server:", error);
+        alert("Failed to sync with server.");
+      });
+  }
+  
+  // Step 2: Automatically Fetch New Quotes Every 30 Seconds
+  setInterval(fetchQuotesFromServer, 30000); // 30,000ms = 30s
+  
+  // Optional: Sync immediately on first load
+  fetchQuotesFromServer();
+  //  Manual Sync Button
+document.getElementById("manualSyncBtn").addEventListener("click", function () {
+    if (confirm("Syncing will replace your current quotes with server data. Continue?")) {
+        fetchQuotesFromServer();
+    }
+});
 
 });

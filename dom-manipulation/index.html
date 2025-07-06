@@ -86,6 +86,20 @@
   border-radius: 4px;
   border: 1px solid #ccc;
 }
+#manualSyncBtn {
+  background-color: #28a745; /* green */
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+#manualSyncBtn:hover {
+  background-color: #218838; /* darker green */
+}
 
   </style>
   
@@ -111,7 +125,8 @@
   <option value="all">All Categories</option>
 </select>
 
-  
+<button id="manualSyncBtn">Sync with Server</button>
+
   <script src="script.js"></script>
 </body>
 </html>
